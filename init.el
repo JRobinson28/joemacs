@@ -19,19 +19,29 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Global key bindings
+
+(use-package general)
+(general-define-key
+ "C-x M-t" 'load-theme)
+
 ;; UI
 
+(set-face-attribute 'default nil :height 140)
 (setq inhibit-startup-message t)   ; Disable startup message
 (tool-bar-mode -1)                 ; Disable the toolbar
 (tooltip-mode -1)                  ; Disable tooltips
 (set-fringe-mode 1)                ; Smaller fringes
 (column-number-mode)               ; Show column number
 (global-display-line-numbers-mode) ; Show line numbers
+(display-time)                     ; Show time
 (dolist (mode '(term-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0)))) ; But not in term-mode
 ;(add-to-list 'initial-frame-alist '(fullscreen . maximized)) ; Maximise window on startup
 
-(load-theme 'misterioso) ; Set the theme
+(use-package solarized-theme)
+(use-package doom-themes)
+(load-theme 'solarized-selenized-black t) ; Set the theme
 
 (use-package all-the-icons)
 
@@ -56,7 +66,7 @@
   :init (ivy-rich-mode 1))
 
 (use-package counsel
-  :bind (("C-M-j" . 'counsel-switch-buffer)
+  :bind (("C-x b" . 'counsel-switch-buffer)
          :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history))
   :config
@@ -131,14 +141,20 @@
 
 (use-package dockerfile-mode)
 
+;; yaml
+
+(use-package yaml-mode)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
  '(package-selected-packages
-   '(dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
+   '(general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
