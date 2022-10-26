@@ -42,6 +42,8 @@
 (display-time)                               ; Show time
 ;(add-to-list 'initial-frame-alist '(fullscreen . maximized)) ; Maximise window on startup
 (fset 'yes-or-no-p 'y-or-n-p) ; Better yes/no prompts
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p) ; Make a shell script executable automatically on save
 
 (use-package solarized-theme)
 (use-package doom-themes)
@@ -108,6 +110,8 @@
   :after counsel
   :init (ivy-rich-mode 1))
 
+(global-hl-line-mode +1)
+
 (use-package counsel
   :after ivy
   :bind (("C-x b" . 'counsel-switch-buffer)
@@ -143,6 +147,22 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
+(use-package company
+  :config
+  (setq company-show-numbers t)
+  ;(setq company-tooltip-limit 10)
+  (setq company-tooltip-flip-when-above t)
+  (global-company-mode))
+
+(use-package browse-kill-ring
+  :bind
+  ("M-y" . browse-kill-ring))
+
+(use-package easy-kill
+  :bind
+  ([remap kill-ring-save] . 'easy-kill)
+  ("C-M-m" . 'easy-mark))
+ 
 ;; Structural editing
 
 (use-package paredit
@@ -215,7 +235,7 @@
  '(custom-safe-themes
    '("0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
  '(package-selected-packages
-   '(super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
+   '(easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
