@@ -36,27 +36,67 @@
 (set-fringe-mode 1)                ; Smaller fringes
 (column-number-mode)               ; Show column number
 (global-display-line-numbers-mode) ; Show line numbers
-(setq display-time-default-load-average nil)
-(display-time)                     ; Show time
 (dolist (mode '(term-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0)))) ; But not in term-mode
+(setq display-time-default-load-average nil) ; Don't show load average
+(display-time)                               ; Show time
 ;(add-to-list 'initial-frame-alist '(fullscreen . maximized)) ; Maximise window on startup
+(fset 'yes-or-no-p 'y-or-n-p) ; Better yes/no prompts
 
 (use-package solarized-theme)
 (use-package doom-themes)
 (load-theme 'solarized-selenized-black t) ; Set the theme
 
 (use-package all-the-icons)
-
+(use-package command-log-mode)
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-;; Navigation
+;; Navigation etc.
 
 (setq default-directory "~/projects")
 (setq confirm-kill-processes nil) ; Quit directly when there are running processes
+(delete-selection-mode) ; Yank replaces selections
+(setq require-final-newline t) ; Newline at end of file
 
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t))) ; store all backup and autosave files in the tmp dir
+
+(use-package windmove
+  :init (windmove-default-keybindings))
+
+(use-package ace-window
+  :bind ("s-w" . ace-window))
+
+(use-package super-save
+  :init (super-save-mode +1)
+  :config
+  (add-to-list 'super-save-triggers 'ace-window))
+
+(use-package crux
+  :ensure t
+  :bind (("M-o" . crux-smart-open-line)
+         ("C-c n" . crux-cleanup-buffer-or-region)
+         ("C-M-z" . crux-indent-defun)
+         ("C-c w" . crux-swap-windows)
+         ("C-c D" . crux-delete-file-and-buffer)
+         ("C-c r" . crux-rename-buffer-and-file)
+         ("C-c t" . crux-visit-term-buffer)
+         ("C-c k" . crux-kill-other-buffers)
+         ("C-c I" . crux-find-user-init-file)
+         ("C-c S" . crux-find-shell-init-file)
+         ("s-j" . crux-top-join-line)
+         ("C-^" . crux-top-join-line)
+         ("s-k" . crux-kill-whole-line)
+         ("C-<backspace>" . crux-kill-line-backwards)
+         ("s-o" . crux-smart-open-line-above)
+         ([remap move-beginning-of-line] . crux-move-beginning-of-line)
+         ([(shift return)] . crux-smart-open-line)
+         ([(control shift return)] . crux-smart-open-line-above)
+         ([remap kill-whole-line] . crux-kill-whole-line)))
 
 (use-package swiper
   :bind (("C-s" . swiper)))
@@ -65,10 +105,11 @@
   :config (ivy-mode 1))
 
 (use-package ivy-rich
-  :after ivy
+  :after counsel
   :init (ivy-rich-mode 1))
 
 (use-package counsel
+  :after ivy
   :bind (("C-x b" . 'counsel-switch-buffer)
          :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history))
@@ -85,9 +126,6 @@
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
-
-(use-package ace-window
-  :bind ("s-w" . ace-window))
 
 (use-package which-key
   :init (which-key-mode)
@@ -119,7 +157,9 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; TODO: add forge
+(use-package forge
+  :custom
+  (setq  forge-topic-list-limit '(100 . 0)))
 
 ;; Clojure
 
@@ -175,7 +215,7 @@
  '(custom-safe-themes
    '("0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
  '(package-selected-packages
-   '(go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
+   '(super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
