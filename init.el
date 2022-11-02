@@ -47,7 +47,7 @@
 
 (use-package solarized-theme)
 (use-package doom-themes)
-(load-theme 'solarized-selenized-black t) ; Set the theme
+(load-theme 'doom-palenight t) ; Set the theme
 
 (use-package all-the-icons)
 (use-package command-log-mode)
@@ -58,6 +58,8 @@
 ;; Navigation etc.
 
 (setq default-directory "~/projects")
+(when (eq system-type 'darwin)
+  (setq insert-directory-program "/usr/local/bin/gls"))
 (setq confirm-kill-processes nil) ; Quit directly when there are running processes
 (delete-selection-mode) ; Yank replaces selections
 (setq require-final-newline t) ; Newline at end of file
@@ -124,9 +126,12 @@
 (use-package projectile
   :init (projectile-mode +1)
   :custom ((setq projectile-project-search-path '("~/projects/")))
-  :bind (:map projectile-mode-map
+  :bind
+  (:map projectile-mode-map
               ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
+              ("C-c p" . projectile-command-map))
+  (:map projectile-command-map
+        ("g" . projectile-ripgrep)))
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
@@ -165,11 +170,27 @@
  
 ;; Structural editing
 
-(use-package paredit
-  :hook (prog-mode . enable-paredit-mode))
+;; (use-package paredit
+;;   :hook (prog-mode . enable-paredit-mode))
+
+(use-package smartparens
+  :init (smartparens-global-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Dired
+
+(use-package dired
+  :ensure nil
+  :hook (dired-mode . dired-hide-details-mode)
+  :custom ((dired-listing-switches "-agho --group-directories-first")))
+
+(use-package dired-single
+  :commands (dired dired-jump))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
 
 ;; Magit
 
@@ -185,13 +206,12 @@
 
 (use-package clojure-mode
   :config
-  (add-hook 'clojure-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package cider
   :config
   (setq nrepl-log-messages t)
-  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+  (setq cider-clojure-cli-global-options "-A:dev:test")
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 ;; Golang
@@ -224,6 +244,11 @@
 
 (use-package yaml-mode)
 
+(use-package neotree
+  :init (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  :config (setq projectile-switch-project-action 'neotree-projectile-action)
+  :bind ([f8] . neotree-toggle))
+
 
 
 
@@ -233,9 +258,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
+   '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
  '(package-selected-packages
-   '(easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
+   '(smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
