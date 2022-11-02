@@ -22,13 +22,14 @@
 
 ;; Global key bindings
 
-(use-package general)
-(general-define-key
- "C-x M-t" 'load-theme
- "C-x M-e" 'enable-theme
- "C-c c" 'clipboard-kill-ring-save
- "C-c v" 'clipboard-yank
- "C-c x" 'clipboard-kill-region)
+(use-package general
+  :init (general-define-key
+	 "C-x M-t" 'load-theme
+	 "C-x M-e" 'enable-theme
+	 "C-c c" 'clipboard-kill-ring-save
+	 "C-c v" 'clipboard-yank
+	 "C-c x" 'clipboard-kill-region))
+
 
 ;; UI
 
@@ -128,7 +129,10 @@
 
 (use-package projectile
   :init (projectile-mode +1)
-  :custom ((setq projectile-project-search-path '("~/projects/")))
+  :custom ((setq projectile-project-search-path '("~/projects/"))
+	   (setq projectile-indexing-method 'hybrid)
+	   (add-to-list 'projectile-globally-ignored-directories "*.clj-kondo")
+	   (add-to-list 'projectile-globally-ignored-directories "*.cpcache"))
   :bind
   (:map projectile-mode-map
               ("s-p" . projectile-command-map)
@@ -177,7 +181,52 @@
 ;;   :hook (prog-mode . enable-paredit-mode))
 
 (use-package smartparens
-  :init (smartparens-global-mode))
+  :init (smartparens-global-strict-mode)
+  :bind (:map smartparens-mode-map
+	      ("C-x M-s" . smartparens-strict-mode)
+	      ("C-M-a" . sp-beginning-of-sexp)
+	      ("C-M-e" . sp-end-of-sexp)
+	      
+	      ("C-<down>" . sp-down-sexp)
+	      ("C-<up>"   . sp-up-sexp)
+	      ("M-<down>" . sp-backward-down-sexp)
+	      ("M-<up>"   . sp-backward-up-sexp)
+
+	      ("C-M-f" . sp-forward-sexp)
+	      ("C-M-b" . sp-backward-sexp)
+
+	      ("C-M-n" . sp-next-sexp)
+	      ("C-M-p" . sp-previous-sexp)
+
+	      ("C-S-f" . sp-forward-symbol)
+	      ("C-S-b" . sp-backward-symbol)
+
+	      ("C-<right>" . sp-forward-slurp-sexp)
+              ("C-<left>"  . sp-backward-slurp-sexp)
+              
+	      ("C-M-t" . sp-transpose-sexp)
+	      ("C-M-k" . sp-kill-sexp)
+	      ("C-k"   . sp-kill-hybrid-sexp)
+	      ("M-k"   . sp-backward-kill-sexp)
+	      ("C-M-w" . sp-copy-sexp)
+	      ("C-M-d" . delete-sexp)
+
+	      ("M-<backspace>" . backward-kill-word)
+	      ("C-<backspace>" . sp-backward-kill-word)
+	      ([remap sp-backward-kill-word] . backward-kill-word)
+
+	      ("M-[" . sp-backward-unwrap-sexp)
+	      ("M-]" . sp-unwrap-sexp)
+
+	      ("C-x C-t" . sp-transpose-hybrid-sexp)
+	      
+	      ("C-c ("  . wrap-with-parens)
+	      ("C-c ["  . wrap-with-brackets)
+	      ("C-c {"  . wrap-with-braces)
+	      ("C-c '"  . wrap-with-single-quotes)
+	      ("C-c \"" . wrap-with-double-quotes)
+	      ("C-c _"  . wrap-with-underscores)
+	      ("C-c `"  . wrap-with-back-quotes)))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -196,6 +245,13 @@
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
 
+;; Neotree
+
+(use-package neotree
+  :init (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  :config (setq projectile-switch-project-action 'neotree-projectile-action)
+  :bind ([f8] . neotree-toggle))
+
 ;; Magit
 
 (use-package magit
@@ -206,11 +262,28 @@
   :custom
   (setq  forge-topic-list-limit '(100 . 0)))
 
+;; LSP mode
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l") 
+  :config
+  (lsp-enable-which-key-integration t)
+  (lsp-headerline-breadcrumb-mode nil))
+
+(use-package lsp-ivy
+  :after lsp)
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
+
 ;; Clojure
 
 (use-package clojure-mode
   :config
-  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'lsp-mode))
 
 (use-package cider
   :config
@@ -220,7 +293,10 @@
 
 ;; Golang
 
-(use-package go-mode)
+(use-package go-mode
+   :config
+   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+   (add-hook 'clojure-mode-hook #'lsp-mode))
 
 ;; Terraform
 
@@ -248,11 +324,6 @@
 
 (use-package yaml-mode)
 
-(use-package neotree
-  :init (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  :config (setq projectile-switch-project-action 'neotree-projectile-action)
-  :bind ([f8] . neotree-toggle))
-
 
 
 
@@ -264,7 +335,8 @@
  '(custom-safe-themes
    '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
  '(package-selected-packages
-   '(smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
+   '(lsp-ui lsp-ivy lsp-mode smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline))
+ '(projectile-indexing-method 'hybrid))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
