@@ -25,7 +25,10 @@
 (use-package general)
 (general-define-key
  "C-x M-t" 'load-theme
- "C-x M-e" 'enable-theme)
+ "C-x M-e" 'enable-theme
+ "C-c c" 'clipboard-kill-ring-save
+ "C-c v" 'clipboard-yank
+ "C-c x" 'clipboard-kill-region)
 
 ;; UI
 
@@ -183,6 +186,7 @@
 
 (use-package dired
   :ensure nil
+  :bind (("C-x C-j" . dired-jump))
   :hook (dired-mode . dired-hide-details-mode)
   :custom ((dired-listing-switches "-agho --group-directories-first")))
 
