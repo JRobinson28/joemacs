@@ -21,7 +21,6 @@
 (setq use-package-always-ensure t)
 
 ;; Global key bindings
-
 (use-package general
   :init (general-define-key
 	 "C-x M-t" 'load-theme
@@ -30,9 +29,11 @@
 	 "C-c v" 'clipboard-yank
 	 "C-c x" 'clipboard-kill-region))
 
+;; No littering
+(setq user-emacs-directory "~/.cache/emacs")
+(use-package no-littering)
 
 ;; UI
-
 (set-face-attribute 'default nil :height 140)
 (setq inhibit-startup-message t)   ; Disable startup message
 (tool-bar-mode -1)                 ; Disable the toolbar
@@ -60,7 +61,6 @@
   :custom ((doom-modeline-height 15)))
 
 ;; Navigation etc.
-
 (setq default-directory "~/projects")
 (when (eq system-type 'darwin)
   (setq insert-directory-program "/usr/local/bin/gls"))
@@ -68,10 +68,10 @@
 (delete-selection-mode) ; Yank replaces selections
 (setq require-final-newline t) ; Newline at end of file
 
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t))) ; store all backup and autosave files in the tmp dir
+;(setq backup-directory-alist
+ ;     `((".*" . ,temporary-file-directory)))
+;(setq auto-save-file-name-transforms
+ ;     `((".*" ,temporary-file-directory t))) ; store all backup and autosave files in the tmp dir
 
 (use-package windmove
   :init (windmove-default-keybindings))
@@ -177,7 +177,6 @@
   ("C-M-m" . 'easy-mark))
  
 ;; Structural editing
-
 ;; (use-package paredit
 ;;   :hook (prog-mode . enable-paredit-mode))
 
@@ -234,7 +233,6 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Dired
-
 (use-package dired
   :ensure nil
   :bind (("C-x C-j" . dired-jump))
@@ -248,14 +246,12 @@
   :hook (dired-mode . all-the-icons-dired-mode))
 
 ;; Neotree
-
 (use-package neotree
   :init (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   :config (setq projectile-switch-project-action 'neotree-projectile-action)
   :bind ([f8] . neotree-toggle))
 
 ;; Magit
-
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
@@ -281,11 +277,11 @@
   (lsp-ui-doc-position 'bottom))
 
 ;; Clojure
-
 (use-package clojure-mode
   :config
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'clojure-mode-hook #'lsp-mode))
+  ;; (add-hook 'clojure-mode-hook #'lsp-mode)
+  )
 
 (use-package cider
   :config
@@ -294,21 +290,18 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 ;; Golang
-
 (use-package go-mode
    :config
    (add-hook 'go-mode-hook #'rainbow-delimiters-mode)
    (add-hook 'go-mode-hook #'lsp-mode))
 
 ;; Terraform
-
 (use-package terraform-mode
   :config (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode))
 
 (use-package terraform-doc)
 
 ;; Markdown
-
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
@@ -319,14 +312,10 @@
          ("g" . grip-mode)))
 
 ;; Docker
-
 (use-package dockerfile-mode)
 
 ;; yaml
-
 (use-package yaml-mode)
-
-
 
 
 (custom-set-variables
@@ -337,11 +326,7 @@
  '(custom-safe-themes
    '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
  '(package-selected-packages
-   '(lsp-ui lsp-ivy lsp-mode smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline))
- '(projectile-indexing-method 'hybrid)
- '(safe-local-variable-values
-   '((eval setq-local cider-clojure-cli-global-options
-	   (concat cider-clojure-cli-global-options " -A:dev:nrepl:app-clj:app-cljs:common:test")))))
+   '(no-littering lsp-mode smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
