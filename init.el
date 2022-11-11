@@ -39,10 +39,13 @@
 (tool-bar-mode -1)                 ; Disable the toolbar
 (tooltip-mode -1)                  ; Disable tooltips
 (set-fringe-mode 1)                ; Smaller fringes
+(global-hl-line-mode +1)           ; Highlight current line
 (column-number-mode)               ; Show column number
 (global-display-line-numbers-mode) ; Show line numbers
-(dolist (mode '(term-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0)))) ; But not in term-mode
+(dolist (mode '(term-mode-hook
+		dired-mode-hook
+		neotree-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0)))) ; But not in some modes
 (setq display-time-default-load-average nil) ; Don't show load average
 (display-time)                               ; Show time
 ;(add-to-list 'initial-frame-alist '(fullscreen . maximized)) ; Maximise window on startup
@@ -116,7 +119,14 @@
   :after counsel
   :init (ivy-rich-mode 1))
 
-(global-hl-line-mode +1)
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; Uncomment the following line to have sorting remembered across sessions!
+  (prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
 
 (use-package counsel
   :after ivy
