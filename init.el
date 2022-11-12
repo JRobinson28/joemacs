@@ -327,6 +327,8 @@
 ;; yaml
 (use-package yaml-mode)
 
+;; justfile
+(use-package just-mode)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
