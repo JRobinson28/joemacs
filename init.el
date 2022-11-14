@@ -300,10 +300,18 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 ;; Golang
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
 (use-package go-mode
    :config
    (add-hook 'go-mode-hook #'rainbow-delimiters-mode)
-   (add-hook 'go-mode-hook #'lsp-mode))
+   (add-hook 'go-mode-hook #'lsp-mode)
+   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+   :bind
+   (("C-c d" . go-doc)
+    ("C-c f" . go-fmt)))
 
 ;; Terraform
 (use-package terraform-mode
