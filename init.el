@@ -27,7 +27,8 @@
 	 "C-x M-e" 'enable-theme
 	 "C-c c" 'clipboard-kill-ring-save
 	 "C-c v" 'clipboard-yank
-	 "C-c x" 'clipboard-kill-region))
+	 "C-c x" 'clipboard-kill-region
+	 "M-3" '(lambda () (interactive) (insert "#"))))
 
 ;; No littering
 (setq user-emacs-directory "~/.cache/emacs")
