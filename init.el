@@ -339,6 +339,24 @@
 ;; justfile
 (use-package just-mode)
 
+;; org-mode
+(defun org-mode-setup ()
+  (org-indent-mode)
+  ;(variable-pitchmode 1)
+  (visual-line-mode 1))
+
+(use-package org
+  :pin org
+  :hook (org-mode . org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾"))
+
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
