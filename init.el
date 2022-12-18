@@ -199,9 +199,7 @@
 	      ("C-M-e" . sp-end-of-sexp)
 	      ("M-r" . raise-sexp)
 	      
-	      ;("C-<down>" . sp-down-sexp)
-	      ;("C-<up>"   . sp-up-sexp)
-	      ("M-<down>" . sp-backward-down-sexp)
+              ("M-<down>" . sp-backward-down-sexp)
 	      ("M-<up>"   . sp-backward-up-sexp)
 
 	      ("C-M-f" . sp-forward-sexp)
@@ -288,11 +286,13 @@
   (lsp-ui-doc-position 'bottom))
 
 ;; Clojure
+(use-package flycheck-clj-kondo)
+
 (use-package clojure-mode
   :config
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-  ;; (add-hook 'clojure-mode-hook #'lsp-mode)
-  )
+  (add-hook 'clojure-mode-hook #'flycheck-mode)
+  (require 'flycheck-clj-kondo))
 
 (use-package cider
   :config
@@ -339,6 +339,9 @@
 ;; justfile
 (use-package just-mode)
 
+;; feature-mode
+(use-package feature-mode)
+
 ;; org-mode
 (defun org-mode-setup ()
   (org-indent-mode)
@@ -349,7 +352,8 @@
   :pin org
   :hook (org-mode . org-mode-setup)
   :config
-  (setq org-ellipsis " ▾"))
+  (setq org-ellipsis " ▾")
+  (setq org-agenda-files '("~/projects/orgfiles/")))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
@@ -364,8 +368,9 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "0c08a5c3c2a72e3ca806a29302ef942335292a80c2934c1123e8c732bb2ddd77" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "d89e15a34261019eec9072575d8a924185c27d3da64899905f8548cbd9491a36" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
+ '(ispell-dictionary nil)
  '(package-selected-packages
-   '(no-littering lsp-mode smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
+   '(flycheck-clj-kondo feature-mode visual-fill-column org-bullets ivy-prescient no-littering lsp-mode smartparens dired-single all-the-icons-dired neotree easy-kill browse-kill-ring company super-save forge crux command-log-mode go-mode counsel-projectile grip-mode general yaml-mode doom-themes solarized-theme dockerfile-mode docker-mode helpful counsel ivy-rich all-the-icons which-key ace-window magit markdown-mode terraform-doc terraform-mode projectile cider clojure-mode use-package swiper paredit doom-modeline)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
