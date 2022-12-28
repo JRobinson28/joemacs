@@ -84,3 +84,6 @@
 	      ("C-c \"" . wrap-with-double-quotes)
 	      ("C-c _"  . wrap-with-underscores)
 	      ("C-c `"  . wrap-with-back-quotes)))
+
+(use-package undo-tree
+  :init (global-undo-tree-mode +1))
