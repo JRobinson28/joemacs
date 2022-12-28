@@ -13,3 +13,6 @@
 (use-package forge
   :custom
   (setq  forge-topic-list-limit '(100 . 0)))
+
+(use-package git-timemachine
+  :bind ("C-c G" . git-timemachine))
