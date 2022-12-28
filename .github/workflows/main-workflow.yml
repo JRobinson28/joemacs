@@ -1,0 +1,14 @@
+name: Emacs CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: install emacs
+        run: sudo apt-get update && sudo apt-get install -y emacs
+      - name: put config in the right place
+        run: ln -s $(pwd) $HOME/.emacs.d
+      - name: load emacs
+        run: emacs --batch --load init.el
