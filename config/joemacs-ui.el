@@ -25,3 +25,9 @@
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package anzu
+  :init (global-anzu-mode +1)
+  :bind
+  (("M-%" . 'anzu-query-replace)
+   ("C-M-%" . 'anzu-query-replace-regexp)))
