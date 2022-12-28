@@ -1,5 +1,5 @@
 ;; UI
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 140) ; Font size
 (setq inhibit-startup-message t)   ; Disable startup message
 (tool-bar-mode -1)                 ; Disable the toolbar
 (tooltip-mode -1)                  ; Disable tooltips
@@ -14,7 +14,6 @@
 (setq display-time-default-load-average nil) ; Don't show load average
 (display-time)                               ; Show time
 
-
 (use-package solarized-theme)
 (use-package doom-themes)
 (load-theme 'doom-palenight t) ; Set the theme
@@ -24,3 +23,5 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
