@@ -69,4 +69,4 @@
 (use-package neotree
   :init (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   :config (setq projectile-switch-project-action 'neotree-projectile-action)
-  :bind ([f8] . neotree-toggle))
+  :bind ("M-n" . neotree-toggle))

@@ -2,6 +2,8 @@
 
 (setq require-final-newline t) ; Newline at end of file
 
+(setq default-tab-width 2)
+
 (use-package crux
   :ensure t
   :bind (("M-o" . crux-smart-open-line)

@@ -5,6 +5,6 @@
 	 "C-c c" 'clipboard-kill-ring-save
 	 "C-c v" 'clipboard-yank
 	 "C-c x" 'clipboard-kill-region
-	 "C-3" '(lambda () (interactive) (insert "#"))))
+	 "£" '(lambda () (interactive) (insert "#"))))
 
 (use-package command-log-mode)
