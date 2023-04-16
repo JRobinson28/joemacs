@@ -30,8 +30,8 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 ;; Golang
-(add-to-list 'load-path "~/golib/pkg/mod/github.com/dougm/goflymake@v0.0.0-20140731161037-3b9634ef394a")
-(require 'go-flycheck)
+;(add-to-list 'load-path "~/golib/pkg/mod/github.com/dougm/goflymake@v0.0.0-20140731161037-3b9634ef394a")
+;(require 'go-flycheck)
 
 (use-package go-mode
    :config

@@ -5,10 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: install emacs
         run: sudo apt-get update && sudo apt-get install -y emacs
       - name: put config in the right place
         run: ln -s $(pwd) $HOME/.emacs.d
+      - name: create default directory
+        run: mkdir $HOME/projects
       - name: load emacs
         run: emacs --batch --load init.el
