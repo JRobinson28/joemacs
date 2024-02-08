@@ -31,24 +31,42 @@
 
 ;; Golang
 ;(add-to-list 'load-path "~/golib/pkg/mod/github.com/dougm/goflymake@v0.0.0-20140731161037-3b9634ef394a")
-;(require 'go-flycheck)
+					;(require 'go-flycheck)
+(defun set-go-build-flags ()
+  (lsp-register-custom-settings '(("gopls.buildFlags" ["-tags=unit"] t))))
 
 (use-package go-mode
-   :config
-   (add-hook 'go-mode-hook #'rainbow-delimiters-mode)
-   (add-hook 'go-mode-hook #'lsp-mode)
-   (add-hook 'go-mode-hook (lambda ()
-			     (add-hook 'before-save-hook 'gofmt-before-save)
-			     (add-hook 'before-save-hook #'lsp-organize-imports t t)
-			     (setq tab-width 4)
-			     (setq indent-tabs-mode 1)))
-   :bind
-   (("C-c d" . go-doc)
-    ("C-c f" . go-fmt)))
+  :init
+  (setq lsp-go-build-flags ["-tags=unit,acceptance"])
+  :config
+  (require 'lsp-go)
+  (add-hook 'go-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'go-mode-hook #'lsp-mode)
+  (add-hook 'go-mode-hook (lambda ()
+			    (add-hook 'before-save-hook 'gofmt-before-save)
+			    (add-hook 'before-save-hook #'lsp-organize-imports t t)
+			    (setq tab-width 4)
+			    (setq indent-tabs-mode 1)))
+  :bind
+  (("C-c d" . go-doc)
+   ("C-c f" . go-fmt)))
 
 (use-package go-guru)
 
 (use-package gotest)
+
+;; Python
+(add-hook 'python-mode-hook 'lsp-deferred)
+
+;; Javascript
+(add-hook 'javascript-mode-hook 'lsp-deferred)
+
+;; Typescript
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
 
 ;; Terraform
 (use-package terraform-mode
